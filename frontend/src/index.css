@@ -1,0 +1,42 @@
+body {
+  text-align: center;
+  font-family: 'Roboto';
+  background-color: black;
+  margin: 0;
+}
+
+.fadeModal-enter {
+  opacity: 0.01;
+}
+
+.fadeModal-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.fadeModal-exit {
+  opacity: 1;
+}
+
+.fadeModal-exit-active {
+  opacity: 0.01;
+  transition: opacity 500ms;
+}
+
+.fadeOnAdd-enter {
+  opacity: 0.01;
+}
+
+.fadeOnAdd-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.fadeOnAdd-exit {
+  opacity: 1;
+}
+
+.fadeOnAdd-exit-active {
+  opacity: 0.01;
+  transition: opacity 500ms;
+}
