@@ -16,7 +16,7 @@
 - Fade effects
 - Modals
 
-#### Technologies Used:
+#### Technologies Used (MERN stack):
 - HTML
 - CSS
 - JavaScript
