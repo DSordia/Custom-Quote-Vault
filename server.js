@@ -1,12 +1,14 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import path from 'path'
 import users from './backend/routes/api/users.js'
 import vaults from './backend/routes/api/vaults.js'
 import auth from './backend/routes/api/auth.js'
 import dotenv from 'dotenv'
-dotenv.config()
+import { path, dirname } from 'path'
+import { fileURLToPath } from 'url'
 
+dotenv.config()
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
 
 //Middleware
