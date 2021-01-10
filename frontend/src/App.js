@@ -13,20 +13,25 @@ const App = () => {
   const [shouldCloseVault, setShouldCloseVault] = useState(false)
   const [userID, setUserID] = useState()
 
-  const closeLoginSignupModal = () => {if (loginSignupModalIsOpen) setLoginSignupModalIsOpen(false)}
-  const openLoginSignupModal = () => {if (!loginSignupModalIsOpen) setLoginSignupModalIsOpen(true)}
+  const closeLoginSignupModal = () => setLoginSignupModalIsOpen(false)
+  const openLoginSignupModal = () => setLoginSignupModalIsOpen(true)
   const openVault = () => setShouldCloseVault(false)
   const closeVault = () => setShouldCloseVault(true)
   const setID = id => setUserID(id)
 
   return (
     <Provider store={store}>
-      <Navbar openLoginSignupModal={openLoginSignupModal} closeVault={closeVault} />
+      <Navbar openLoginSignupModal={openLoginSignupModal}
+              closeVault={closeVault} />
 
       <BrowserRouter>
         <Route exact path={'/'}>
-          <CSSTransition in={loginSignupModalIsOpen} timeout={500} classNames='fadeModal' unmountOnExit>
-            <LoginSignupModal closeLoginSignupModal={closeLoginSignupModal} setUserID={setID} />
+          <CSSTransition in={loginSignupModalIsOpen}
+                         timeout={500}
+                         classNames='fadeModal'
+                         unmountOnExit>
+            <LoginSignupModal closeLoginSignupModal={closeLoginSignupModal}
+                              setUserID={setID} />
           </CSSTransition>
 
           <Vaults userID={userID}
@@ -36,8 +41,12 @@ const App = () => {
         </Route>
 
         <Route path={'/reset/:id'}>
-          <CSSTransition in={loginSignupModalIsOpen} timeout={500} classNames='fadeModal' unmountOnExit>
-            <LoginSignupModal closeLoginSignupModal={closeLoginSignupModal} setUserID={setID} />
+          <CSSTransition in={loginSignupModalIsOpen}
+                         timeout={500}
+                         classNames='fadeModal'
+                         unmountOnExit>
+            <LoginSignupModal closeLoginSignupModal={closeLoginSignupModal}
+                              setUserID={setID} />
           </CSSTransition>
 
           <ResetPassword openLoginSignupModal={openLoginSignupModal} />

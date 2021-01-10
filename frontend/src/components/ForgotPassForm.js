@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { ForgotFormDiv, InputLabel, ForgotInputField, SubmitBtn, SubmittedTxt, ErrorMsg, ForgotPassTitle } from '../styles/LoginSignupFormsStyles'
+import { ForgotFormDiv, InputLabel, ForgotInputField, SubmitBtn,
+         SubmittedTxt, ErrorMsg, ForgotPassTitle } from '../styles/LoginSignupFormsStyles'
 import consts from '../constants'
 import axios from 'axios'
 
@@ -31,21 +32,22 @@ const ForgotPassForm = () => {
             {!forgotPassSubmitted ?
                 <>
                     <ForgotPassTitle>Forgot Password?</ForgotPassTitle>
+                    
                     <InputLabel>Enter Email Address:</InputLabel>
 
                     <ForgotInputField value={email}
-                                    placeholder={'Email Address'}
-                                    onChange={e => typeEmail(e.target.value)} />
+                                      placeholder={'Email Address'}
+                                      onChange={e => typeEmail(e.target.value)} />
 
                     <ErrorMsg>{emailErrMsg}</ErrorMsg>
 
                     <br />
 
                     <SubmitBtn isDisabled={emailErrMsg.length > 0}
-                            onClick={e => {if (!emailErrMsg.length > 0) {
+                               onClick={e => {if (!emailErrMsg.length > 0) {
                                     onForgotPassSubmitted(e)
-                            }}}>
-                                Submit
+                               }}}>
+                                   Submit
                     </SubmitBtn>
                 </>
             :   <SubmittedTxt>

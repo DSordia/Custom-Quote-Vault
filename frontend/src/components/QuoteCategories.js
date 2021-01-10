@@ -249,7 +249,6 @@ class QuoteCategories extends Component {
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
-    
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
     setCategoryToDeleteID = categoryToDeleteID => this.setState({categoryToDeleteID: categoryToDeleteID})
@@ -280,10 +279,12 @@ class QuoteCategories extends Component {
 
         return (
             <div>
-                <ColorExtractor src={vault.vaultImg} getColors={colors => this.getBorderColors(colors)} />
+                <ColorExtractor src={vault.vaultImg}
+                                getColors={colors => this.getBorderColors(colors)} />
 
                 {!categoryIsOpen ?
-                    <VaultDiv vaultColor1={borderColors[0]} vaultColor2={borderColors[1]}>
+                    <VaultDiv vaultColor1={borderColors[0]}
+                              vaultColor2={borderColors[1]}>
 
                         <Nav>
                             <NavReturnBtn onClick={closeVault}>Return to Vaults</NavReturnBtn>
@@ -297,7 +298,10 @@ class QuoteCategories extends Component {
                                 </NavEditBtn>}
                         </Nav>
 
-                        <CSSTransition in={showAreYouSureModal} timeout={500} classNames='fadeModal' unmountOnExit>
+                        <CSSTransition in={showAreYouSureModal}
+                                       timeout={500}
+                                       classNames='fadeModal'
+                                       unmountOnExit>
                             <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
                                              delete={this.deleteCategory}
                                              areYouSureTxt={consts.ARE_YOU_SURE_CATEGORY_TXT}
@@ -324,7 +328,8 @@ class QuoteCategories extends Component {
                                         </CategoryErrorMsg>
 
                                         {!loadingNewImg ?
-                                            <CategoryImg isEditing={true} src={newCategory.img} />
+                                            <CategoryImg isEditing={true}
+                                                         src={newCategory.img} />
                                         :   <p>Uploading Image...</p>}
 
                                         <FileInputDiv>
@@ -346,7 +351,7 @@ class QuoteCategories extends Component {
                                                    key={categories[categories.length-i-1]._id}
                                                    timeout={500}
                                                    classNames='fadeOnAdd'>
-
+                                                       
                                         {isEditing ?
                                             <CategoryContainer key={categories[categories.length-i-1]._id}
                                                                onClick={() => {
@@ -379,7 +384,7 @@ class QuoteCategories extends Component {
                                                 {!loadingImg[categories[categories.length-i-1]._id] ?
                                                     <CategoryImg isEditing={true}
                                                                  src={categoryImgs[categories[categories.length-i-1]._id]} />
-                                                : <p>Uploading Image...</p>}
+                                                :   <p>Uploading Image...</p>}
 
                                                 <FileInputDiv>
                                                     <FileInputBtn>Choose file for category image</FileInputBtn>
@@ -414,10 +419,10 @@ class QuoteCategories extends Component {
                     </VaultDiv>
                     
                 :   <Quotes userID={userID}
-                          categoryID={categoryToOpenID}
-                          vaultID={vault._id}
-                          vaultTitle={vault.vaultName}
-                          closeCategory={this.closeCategory} />}
+                            categoryID={categoryToOpenID}
+                            vaultID={vault._id}
+                            vaultTitle={vault.vaultName}
+                            closeCategory={this.closeCategory} />}
             </div>
         )
     }

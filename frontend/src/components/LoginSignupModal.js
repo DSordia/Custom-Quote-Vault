@@ -3,12 +3,12 @@ import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import ForgotPassForm from './ForgotPassForm'
 import { connect } from 'react-redux'
-import { getVaults } from '../actions/vaultActions'
-import { initializeVaults } from '../actions/vaultActions'
 import { login, signup } from '../actions/userActions'
+import { getVaults, initializeVaults } from '../actions/vaultActions'
 import { withRouter } from 'react-router-dom'
 import { GoogleLogin } from 'react-google-login'
-import { ModalDiv, ModalNav, ModalNavTxt, ModalNavDivider, HR, ModalNavX, GoogleDiv } from '../styles/LoginSignupModalStyles'
+import { ModalDiv, ModalNav, ModalNavTxt, ModalNavDivider,
+         HR, ModalNavX, GoogleDiv } from '../styles/LoginSignupModalStyles'
 import axios from 'axios'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -16,33 +16,7 @@ dotenv.config()
 class LoginSignupModal extends Component {
     state = {
         showLoginForm: true,
-        showSignupForm: false,
-        signedUp: false, //if true, logged in
-        userID: '',
-        initialized: false,
-        googleClicked: false
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        if (props.isAuthenticated && state.googleClicked) {
-            
-            //Signed in with google for the first time
-            if (state.signedUp && !state.initialized) {
-                props.setUserID(state.userID)
-                props.initializeVaults(state.userID)
-                props.closeLoginSignupModal()
-                return {initialized: true}
-
-            //Logging in with google
-            } else if (!state.signedUp) {
-                props.setUserID(state.userID)
-                props.getVaults(state.userID)
-                props.closeLoginSignupModal()
-                return null
-            }
-        } else {
-            return null
-        }
+        showSignupForm: false
     }
 
     //Called after logging in from reset password route
@@ -56,20 +30,19 @@ class LoginSignupModal extends Component {
         const res = await axios.post('/api/users', JSON.stringify(newUser), config)
 
         if (res.data.exists) {
-            //user has already signed in with google before
-            this.setState({signedUp: false, userID: res.data.user._id, googleClicked: true})
             this.props.login(res.data)
+            this.props.getVaults(res.data.user._id)
         } else {
-            //user signing in with google for the first time
-            this.setState({signedUp: true, userID: res.data.user._id, googleClicked: true})
             this.props.signup(res.data)
+            this.props.initializeVaults(res.data.user._id)
         }
+        
+        this.props.setUserID(res.data.user._id)
+        this.props.closeLoginSignupModal()
     }
 
     toggleLoginForm = () => this.setState({showLoginForm: !this.state.showLoginForm})
-
     setShowLoginForm = shouldShow => this.setState({showLoginForm: shouldShow})
-
     setShowSignupForm = shouldShow => this.setState({showSignupForm: shouldShow})
 
     render() {
@@ -82,7 +55,7 @@ class LoginSignupModal extends Component {
                     <ModalNavTxt onClick={() => {
                                     this.setShowLoginForm(true)
                                     this.setShowSignupForm(false)
-                                }}
+                                 }}
                                  selected={showLoginForm}>
                                     Login
                     </ModalNavTxt>
@@ -112,19 +85,16 @@ class LoginSignupModal extends Component {
                 : <ForgotPassForm />}
 
                 <GoogleDiv>
-                    <GoogleLogin
-                        clientId={process.env.REACT_APP_GOOGLE_ID}
-                        onSuccess={this.googleClicked}
-                        onFailure={this.googleClicked} />
+                    <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_ID}
+                                 onSuccess={this.googleClicked}
+                                 onFailure={this.googleClicked} />
                 </GoogleDiv>
             </ModalDiv>
         )
     }
 }
 
-const mapStateToProps = state => {
-    return { isAuthenticated: state.user.isAuthenticated }
-}
+const mapStateToProps = () => { return {} }
 
 const mapDispatchToProps = () => {
     return { login, signup, getVaults, initializeVaults }

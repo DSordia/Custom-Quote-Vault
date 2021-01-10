@@ -11,7 +11,10 @@ const Navbar = props => {
   return (
       <Nav>
         <NavTitle onClick={() => props.closeVault()}>Custom Quote Vault</NavTitle>
-        <NavLoginOrSignout onClick={navLoginOrSignoutClicked}>{!isLoggedIn ? 'Login / Signup' : 'Sign Out'} </NavLoginOrSignout>
+        
+        <NavLoginOrSignout onClick={navLoginOrSignoutClicked}>
+          {!isLoggedIn ? 'Login / Signup' : 'Sign Out'}
+        </NavLoginOrSignout>
       </Nav>
   )
 }

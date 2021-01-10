@@ -32,19 +32,23 @@ class SignupForm extends Component {
 
     validateEmail = input => {
         if (/\s/.test(input)) {
-            this.setState({email: input, emailErr: true,
+            this.setState({email: input,
+                           emailErr: true,
                            emailErrMsg: 'Email cannot contain any whitespace.'})
         } else {
-            this.setState({email: input, emailErr: false})
+            this.setState({email: input,
+                           emailErr: false})
         }
     }
 
     validatePass = input => {
         if (input.length < consts.MIN_PASSWORD_LENGTH) {
-            this.setState({pass: input, passErr: true,
+            this.setState({pass: input,
+                           passErr: true,
                            passErrMsg: `Password must be at least ${consts.MIN_PASSWORD_LENGTH} characters.`})
         } else {
-            this.setState({pass: input, passErr: false})
+            this.setState({pass: input,
+                           passErr: false})
         }
     }
 
@@ -54,11 +58,13 @@ class SignupForm extends Component {
         //Check if either field is empty
         if (this.state.email.trim().length === 0) {
             valid = false
-            this.setState({emailErrMsg: 'Enter an email address.', emailErr: true})
+            this.setState({emailErrMsg: 'Enter an email address.',
+                           emailErr: true})
         }
         if (this.state.pass.trim().length === 0) {
             valid = false
-            this.setState({passErrMsg: 'Enter a password.', passErr: true})
+            this.setState({passErrMsg: 'Enter a password.',
+                           passErr: true})
         }
 
         if (valid) {
@@ -68,7 +74,8 @@ class SignupForm extends Component {
             //add new user to DB
             const res = await axios.post('/api/users', JSON.stringify(newUser), config)
             if (res.data.exists) {
-                this.setState({emailErr: true, emailErrMsg: 'A user with this email already exists.'})
+                this.setState({emailErr: true,
+                               emailErrMsg: 'A user with this email already exists.'})
             } else {
                 this.props.signup(res.data)
             }

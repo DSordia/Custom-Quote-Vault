@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormDiv, LoginInputLabel, InputField, LoginBtn, ForgotPassTxtDiv, ForgotPassTxt, ErrorMsg } from '../styles/LoginSignupFormsStyles'
+import { FormDiv, LoginInputLabel, InputField, LoginBtn,
+         ForgotPassTxtDiv, ForgotPassTxt, ErrorMsg } from '../styles/LoginSignupFormsStyles'
 import { getVaults } from '../actions/vaultActions'
 import { login } from '../actions/userActions'
 import consts from '../constants'
@@ -39,11 +40,13 @@ class LoginForm extends Component {
         let valid = true
         if (this.state.email.length === 0) {
             valid = false
-            this.setState({emailErrMsg: 'Enter an email address.', emailErr: true})
+            this.setState({emailErrMsg: 'Enter an email address.',
+                           emailErr: true})
         }
         if (this.state.pass.length === 0) {
             valid = false
-            this.setState({passErrMsg: 'Enter a password.', passErr: true})
+            this.setState({passErrMsg: 'Enter a password.',
+                           passErr: true})
         }
 
         if (valid) {
@@ -58,9 +61,11 @@ class LoginForm extends Component {
             //if catch, then user user doesn't exist or invalid password
             } catch (e) {
                 if (JSON.stringify(e.response.data) === '{"doesnt_exist":true}') {
-                    this.setState({emailErr: true, emailErrMsg: consts.EMAIL_DOESNT_EXIST})
+                    this.setState({emailErr: true,
+                                   emailErrMsg: consts.EMAIL_DOESNT_EXIST})
                 } else if (JSON.stringify(e.response.data) === '{"invalid_password":true}') {
-                    this.setState({passErr: true, passErrMsg: 'Invalid password.'})
+                    this.setState({passErr: true,
+                                   passErrMsg: 'Invalid password.'})
                 }
             }
         }
@@ -92,7 +97,10 @@ class LoginForm extends Component {
                     <ErrorMsg>{passErr && passErrMsg}</ErrorMsg>
                 </form>
 
-                <LoginBtn isDisabled={disabled} onClick={() => {if (!disabled) this.onLoginClicked()}}>Log In</LoginBtn>
+                <LoginBtn isDisabled={disabled}
+                          onClick={() => {if (!disabled) this.onLoginClicked()}}>
+                    Log In
+                </LoginBtn>
                 
                 <ForgotPassTxtDiv>
                     <ForgotPassTxt onClick={toggleLoginForm}>Forgot Password?</ForgotPassTxt>

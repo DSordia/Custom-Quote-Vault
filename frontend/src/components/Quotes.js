@@ -69,8 +69,10 @@ class Quotes extends Component {
         //delete from state
         let empty = {...this.state.emptyErrors}
         let quotes = {...this.state.tempQuotes}
+
         delete empty[id]
         delete quotes[id]
+        
         this.setState({emptyErrors: empty,
                        tempQuotes: quotes})
     }
@@ -236,7 +238,6 @@ class Quotes extends Component {
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
-
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
     setQuoteToDeleteID = quoteToDeleteID => this.setState({quoteToDeleteID: quoteToDeleteID})
@@ -259,9 +260,11 @@ class Quotes extends Component {
         const quotes = category.quotes
 
         return (
-            <VaultDiv vaultColor1={borderColors[0]} vaultColor2={borderColors[1]}>
+            <VaultDiv vaultColor1={borderColors[0]}
+                      vaultColor2={borderColors[1]}>
 
-                <ColorExtractor src={category.categoryImg} getColors={colors => this.getBorderColors(colors)} />
+                <ColorExtractor src={category.categoryImg}
+                                getColors={colors => this.getBorderColors(colors)} />
 
                 <Nav>
                     <NavReturnBtn onClick={closeCategory}>Return to Quote Categories</NavReturnBtn>
@@ -275,7 +278,10 @@ class Quotes extends Component {
                         </NavEditBtn>}
                 </Nav>
 
-                <CSSTransition in={showAreYouSureModal} timeout={500} classNames='fadeModal' unmountOnExit>
+                <CSSTransition in={showAreYouSureModal}
+                               timeout={500}
+                               classNames='fadeModal'
+                               unmountOnExit>
                     <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal} 
                                      delete={this.deleteQuote}
                                      areYouSureTxt={consts.ARE_YOU_SURE_QUOTE_TXT}

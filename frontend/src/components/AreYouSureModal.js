@@ -8,7 +8,10 @@ const AreYouSureModal = props => {
                 {props.areYouSureTxt}
             </AreYouSureTxt>
             <BtnsDiv>
-                <AreYouSureBtn onClick={() => {props.delete(); props.closeAreYouSureModal()}}>
+                <AreYouSureBtn onClick={() => {
+                                props.delete()
+                                props.closeAreYouSureModal()
+                               }}>
                     {props.yesTxt}
                 </AreYouSureBtn>
                 <AreYouSureBtn onClick={props.closeAreYouSureModal}>

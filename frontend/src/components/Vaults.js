@@ -6,8 +6,9 @@ import { connect } from 'react-redux'
 import { addVault, deleteVault, editVaultName, editVaultImg } from '../actions/vaultActions'
 import Vault from './Vault'
 import AreYouSureModal from './AreYouSureModal'
-import { VaultsNav, VaultsNavEditBtn, VaultsGrid, NewVaultContainer, InputField, VaultErrorMsg, VaultImg,
-         AddVaultBtn, VaultContainer, VaultX, VaultTxt, LoginTxt, FileInputDiv, FileInput, FileInputBtn } from '../styles/VaultsStyles'
+import { VaultsNav, VaultsNavEditBtn, VaultsGrid, NewVaultContainer, InputField,
+         VaultErrorMsg, VaultImg, AddVaultBtn, VaultContainer, VaultX, VaultTxt,
+         LoginTxt, FileInputDiv, FileInput, FileInputBtn } from '../styles/VaultsStyles'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -173,7 +174,8 @@ class Vaults extends Component {
 
         newVault.img = img.secure_url
 
-        this.setState({newVault: newVault, loadingNewImg: false})
+        this.setState({newVault: newVault,
+                       loadingNewImg: false})
     }
 
     //Uploads image to cloudinary DB and stores generated URL
@@ -245,13 +247,13 @@ class Vaults extends Component {
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
-
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
     setVaultToDeleteID = vaultToDeleteID => this.setState({vaultToDeleteID: vaultToDeleteID})
 
     openVault = vaultToOpenID => {
-        this.setState({vaultIsOpen: true, vaultToOpenID: vaultToOpenID})
+        this.setState({vaultIsOpen: true,
+                       vaultToOpenID: vaultToOpenID})
         this.props.openVault()
     }
 
@@ -283,7 +285,10 @@ class Vaults extends Component {
                                 </VaultsNavEditBtn>}
                         </VaultsNav>
     
-                        <CSSTransition in={showAreYouSureModal} timeout={500} classNames='fadeModal' unmountOnExit>
+                        <CSSTransition in={showAreYouSureModal}
+                                       timeout={500}
+                                       classNames='fadeModal'
+                                       unmountOnExit>
                             <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
                                              delete={this.deleteVault}
                                              areYouSureTxt={consts.ARE_YOU_SURE_VAULT_TXT}
@@ -312,7 +317,8 @@ class Vaults extends Component {
                                             : ''}
                                         </VaultErrorMsg>
                                         
-                                        {!loadingNewImg ? <VaultImg isEditing={true} src={newVault.img} />
+                                        {!loadingNewImg ? <VaultImg isEditing={true}
+                                                                    src={newVault.img} />
                                         : <p>Uploading Image...</p>}
 
                                         <FileInputDiv>
@@ -330,7 +336,11 @@ class Vaults extends Component {
                                     </NewVaultContainer>}
 
                                 {vaults.map((vault, i) => (
-                                    <CSSTransition in={true} key={vaults[vaults.length-i-1]._id} timeout={500} classNames='fadeOnAdd'>
+                                    <CSSTransition in={true}
+                                                   key={vaults[vaults.length-i-1]._id}
+                                                   timeout={500}
+                                                   classNames='fadeOnAdd'>
+                                                       
                                         {isEditing ?
                                             <VaultContainer key={vaults[vaults.length-i-1]._id}
                                                             onClick={() => {if (!isEditing) {
@@ -379,7 +389,8 @@ class Vaults extends Component {
 
                                                 <VaultTxt>{vaults[vaults.length-i-1].vaultName}</VaultTxt>
 
-                                                <VaultImg isEditing={false} src={vaults[vaults.length-i-1].vaultImg} />
+                                                <VaultImg isEditing={false}
+                                                          src={vaults[vaults.length-i-1].vaultImg} />
                                             </VaultContainer>}
                                     </CSSTransition>
                                 ))}

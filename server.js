@@ -1,8 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import users from './routes/api/users.js'
-import vaults from './routes/api/vaults.js'
-import auth from './routes/api/auth.js'
+import users from './backend/routes/api/users.js'
+import vaults from './backend/routes/api/vaults.js'
+import auth from './backend/routes/api/auth.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
