@@ -37,7 +37,8 @@ const App = () => {
           <Vaults userID={userID}
                   openLoginSignupModal={openLoginSignupModal}
                   shouldCloseVault={shouldCloseVault}
-                  openVault={openVault} />
+                  openVault={openVault}
+                  closeVault={closeVault} />
         </Route>
 
         <Route path={'/reset/:id'}>

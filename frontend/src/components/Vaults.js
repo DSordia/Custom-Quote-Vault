@@ -32,6 +32,12 @@ class Vaults extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
+        if (props.isLoggedOut) {
+            props.closeVault()
+            window.location.reload()
+            return null
+        }
+
         // if there are more vaults in the DB than in state, add that vault to state
         // unless it's because a vault was deleted from state
         if (state.isEditing && (Object.keys(state.vaultNames).length < props.vaults.vaults.length)) {
@@ -416,6 +422,7 @@ class Vaults extends Component {
 const mapStateToProps = state => {
     return { vaults: state.vaults,
              isLoggedIn: state.user.isLoggedIn,
+             isLoggedOut: state.user.isLoggedOut,
              loading: state.vaults.loading }
 }
 

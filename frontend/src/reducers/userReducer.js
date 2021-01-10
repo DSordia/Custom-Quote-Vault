@@ -5,7 +5,8 @@ const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: false,
     user: {},
-    isLoggedIn: false
+    isLoggedIn: false,
+    isLoggedOut: false
 }
 
 const userReducer = createReducer(initialState, builder => {
@@ -32,6 +33,7 @@ const userReducer = createReducer(initialState, builder => {
         state.isAuthenticated = false
         state.user = {}
         state.isLoggedIn = false
+        state.isLoggedOut = true
     })
 })
 
