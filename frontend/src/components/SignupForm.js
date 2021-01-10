@@ -25,9 +25,8 @@ class SignupForm extends Component {
             props.routeToMain()
             props.closeLoginSignupModal()
             return {initialized: true}
-        } else {
-            return null
         }
+        return null
     }
 
     validateEmail = input => {

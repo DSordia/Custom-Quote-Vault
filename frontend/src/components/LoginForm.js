@@ -20,18 +20,15 @@ class LoginForm extends Component {
 
     static getDerivedStateFromProps(props, state) {
         if (props.isAuthenticated && state.loginClicked) {
-            console.log('getting vaults in LoginForm gdsfp')
             props.setUserID(props.user.id)
             props.routeToMain()
             props.getVaults(props.user.id)
             props.closeLoginSignupModal()
-        } else {
-            return null
         }
+        return null
     }
 
     typeEmail = input => this.setState({email: input, emailErr: false})
-
     typePass = input => this.setState({pass: input, passErr: false})
 
     onLoginClicked = async () => {

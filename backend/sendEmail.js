@@ -13,7 +13,7 @@ const sendResetLink = (email, id) => {
         from: `${process.env.EMAIL}`,
         to: email,
         subject: 'Reset Password for Custom Quote Vault',
-        text: `To reset your Custom Quote Vault password, click the following link: http://localhost:3000/reset/${id}`
+        text: `To reset your Custom Quote Vault password, click the following link: https://custom-quote-vault.herokuapp.com/reset/${id}`
     }
 
     transporter.sendMail(mailOptions, err => { if (err) console.log(err) })
