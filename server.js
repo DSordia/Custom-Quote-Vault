@@ -4,7 +4,8 @@ import users from './backend/routes/api/users.js'
 import vaults from './backend/routes/api/vaults.js'
 import auth from './backend/routes/api/auth.js'
 import dotenv from 'dotenv'
-import { path, dirname } from 'path'
+import * as path from 'path'
+import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 dotenv.config()
