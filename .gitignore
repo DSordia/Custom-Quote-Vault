@@ -4,3 +4,6 @@ package-lock.json
 
 frontend/src/config.js
 backend/config.js
+
+.env
+frontend/.eslintcache
