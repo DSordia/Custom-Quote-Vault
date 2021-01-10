@@ -87,8 +87,8 @@ class LoginSignupModal extends Component {
 
                 <GoogleDiv>
                     <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_ID}
-                                 onSuccess={this.googleClicked}
-                                 onFailure={this.googleClicked} />
+                                 onSuccess={this.googleClicked} />
+                                 {/* onFailure={this.googleClicked} /> */}
                 </GoogleDiv>
             </ModalDiv>
         )
