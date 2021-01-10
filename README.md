@@ -20,13 +20,13 @@
 - HTML
 - CSS
 - JavaScript
-- ReactJS
+- React
 - Redux
 - React-Router
 - Styled Components
 - Express
-- MongoDB/Mongoose
-- NodeJS
+- MongoDB
+- Node
 - Cloudinary
 - Heroku
 
