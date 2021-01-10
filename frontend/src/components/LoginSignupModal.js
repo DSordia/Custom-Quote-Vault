@@ -7,10 +7,11 @@ import { getVaults } from '../actions/vaultActions'
 import { initializeVaults } from '../actions/vaultActions'
 import { login, signup } from '../actions/userActions'
 import { withRouter } from 'react-router-dom'
-import config from '../config'
 import { GoogleLogin } from 'react-google-login'
 import { ModalDiv, ModalNav, ModalNavTxt, ModalNavDivider, HR, ModalNavX, GoogleDiv } from '../styles/LoginSignupModalStyles'
 import axios from 'axios'
+import dotenv from 'dotenv'
+dotenv.config()
 
 class LoginSignupModal extends Component {
     state = {
@@ -112,7 +113,7 @@ class LoginSignupModal extends Component {
 
                 <GoogleDiv>
                     <GoogleLogin
-                        clientId={config.googleID}
+                        clientId={process.env.REACT_APP_GOOGLE_ID}
                         onSuccess={this.googleClicked}
                         onFailure={this.googleClicked} />
                 </GoogleDiv>

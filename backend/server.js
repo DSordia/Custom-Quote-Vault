@@ -1,9 +1,10 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import config from './config.js'
 import users from './routes/api/users.js'
 import vaults from './routes/api/vaults.js'
 import auth from './routes/api/auth.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express()
 
@@ -11,7 +12,7 @@ const app = express()
 app.use(express.json())
 
 //Grab database configuration
-const db = config.mongoURI
+const db = process.env.MONGO_URI
 
 //Connect to Mongo Database
 mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
@@ -25,10 +26,10 @@ app.use('/api/auth', auth)
 
 //Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('client/build'))
+    app.use(express.static('frontend/build'))
 
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
     })
 }
 

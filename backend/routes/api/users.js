@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import bcrypt from 'bcryptjs'
-import config from '../../config.js'
 import jwt from 'jsonwebtoken'
 import sendResetLink from '../../sendEmail.js'
 import User from '../../schemas/User.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const JWT_SECRET = config.jwtSecret
+const JWT_SECRET = process.env.JWT_SECRET
 const router = Router()
 
 //POST api/users: adds a user on signup
