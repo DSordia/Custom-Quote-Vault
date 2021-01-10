@@ -53,7 +53,6 @@ class LoginForm extends Component {
             const config = {headers: {'content-type': 'application/json'}}
 
             try {
-                console.log('posting in LoginForm loginClicked')
                 const res = await axios.post('/api/auth', JSON.stringify(user), config)
                 this.setState({loginClicked: true})
                 this.props.login(res.data)

@@ -4,13 +4,11 @@ const AreYouSureModal = props => {
     return (
         <ModalDiv>
             <ModalNavX onClick={props.closeAreYouSureModal}>X</ModalNavX>
-            <AreYouSureTxt>
-                {props.areYouSureTxt}
-            </AreYouSureTxt>
+            <AreYouSureTxt>{props.areYouSureTxt}</AreYouSureTxt>
             <BtnsDiv>
                 <AreYouSureBtn onClick={() => {
-                                props.delete()
-                                props.closeAreYouSureModal()
+                               props.delete()
+                               props.closeAreYouSureModal()
                                }}>
                     {props.yesTxt}
                 </AreYouSureBtn>
