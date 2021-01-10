@@ -27,6 +27,7 @@ class LoginSignupModal extends Component {
         const newUser = {email: response.googleId, password: null}
         const config = {headers: {'content-type': 'application/json'}}
 
+        console.log('posting in googleClicked')
         const res = await axios.post('/api/users', JSON.stringify(newUser), config)
 
         if (res.data.exists) {

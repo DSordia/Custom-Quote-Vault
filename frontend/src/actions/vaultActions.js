@@ -3,12 +3,14 @@ import { LOADING_VAULTS, GET_VAULTS, ADD_VAULT, DELETE_VAULT,
 import axios from 'axios'
 
 export const initializeVaults = userID => dispatch => {
+    console.log('initializeVaults action fired')
     axios.post('/api/vaults', {userID: userID})
 }
 
 export const startLoading = () => dispatch => dispatch({type: LOADING_VAULTS})
 
 export const getVaults = userID => async dispatch => {
+    console.log('getVaults action fired')
     const res = await axios.get(`/api/vaults/${userID}`)
 
     dispatch({
