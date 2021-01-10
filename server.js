@@ -10,12 +10,15 @@ const app = express()
 
 //Middleware
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 //Grab database configuration
 const db = process.env.MONGO_URI
 
 //Connect to Mongo Database
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(db, {useNewUrlParser: true,
+                      useUnifiedTopology: true,
+                      useCreateIndex: true})
 .then(() => console.log('Connected to MongoDB Database.'))
 .catch(err => console.log(err))
 
@@ -24,14 +27,19 @@ app.use('/api/users', users)
 app.use('/api/vaults', vaults)
 app.use('/api/auth', auth)
 
-//Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('frontend/build'))
+// //Serve static assets if in production
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static('frontend/build'))
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', '*/index.html'))
-    })
-}
+//     app.get('/*', (req, res) => {
+//         res.sendFile(path.resolve(__dirname, 'frontend', 'build', '*/index.html'))
+//     })
+// }
+
+app.use(express.static(path.join(__dirname, 'build')))
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+})
 
 const PORT = process.env.PORT || 5000
 
