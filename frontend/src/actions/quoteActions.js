@@ -30,10 +30,11 @@ export const addQuote = (newQuote, categoryID, vaultID, userID) => async (dispat
         if (vault._id === vaultID) {
             for (const category of vault.categories) {
                 if (category._id === categoryID) {
-                    console.log('added newQuoteID: ', category.quotes[category.quotes.length-1]._id)
                     newQuoteID = category.quotes[category.quotes.length-1]._id
+                    break
                 }
             }
+            break
         }
     }
     

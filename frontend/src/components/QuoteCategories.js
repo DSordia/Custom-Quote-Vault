@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import defaultImg from '../images/blackbox.jpg'
 import consts from '../constants'
-import config from '../config'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { addCategory, deleteCategory, editCategoryName, editCategoryImg } from '../actions/categoryActions'
@@ -11,6 +10,8 @@ import AreYouSureModal from './AreYouSureModal'
 import { VaultDiv, Nav, Title, Subtitle, NavReturnBtn, NavEditBtn, CategoriesGrid, CategoryContainer,
          NewCategoryContainer, CategoryName, CategoryImg, InputField, CategoryErrorMsg, AddCategoryBtn,
          CategoryX, FileInputDiv, FileInput, FileInputBtn } from '../styles/InsideVaultStyles'
+import dotenv from 'dotenv'
+dotenv.config()
 
 class QuoteCategories extends Component {
     state = {
@@ -91,8 +92,11 @@ class QuoteCategories extends Component {
         delete categoryNames[id]
         delete categoryImgs[id]
 
-        this.setState({emptyErrors: empty, existsErrors: exists, deleted: true,
-                       categoryNames: categoryNames, categoryImgs: categoryImgs})
+        this.setState({emptyErrors: empty,
+                       existsErrors: exists,
+                       categoryNames: categoryNames,
+                       categoryImgs: categoryImgs,
+                       deleted: true})
     }
 
     validateNewCategoryInput = input => {
@@ -153,18 +157,26 @@ class QuoteCategories extends Component {
         const newImg = e.target.files[0]
         let newCategory = {...this.state.newCategory}
 
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
+
         const data = new FormData()
         data.append('file', newImg)
         data.append('upload_preset', consts.IMG_FOLDER)
 
         this.setState({loadingNewImg: true})
 
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         newCategory.img = img.secure_url
 
-        this.setState({newCategory: newCategory, loadingNewImg: false})
+        this.setState({newCategory: newCategory,
+                       loadingNewImg: false})
     }
 
     //Uploads image to cloudinary DB and stores generated URL
@@ -173,6 +185,12 @@ class QuoteCategories extends Component {
         let categoryImgs = {...this.state.categoryImgs}
         let loadingImg = {...this.state.loadingImg}
 
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
+
         const data = new FormData()
         data.append('file', newImg)
         data.append('upload_preset', consts.IMG_FOLDER)
@@ -180,13 +198,15 @@ class QuoteCategories extends Component {
         loadingImg[categoryID] = true
         this.setState({loadingImg: loadingImg})
 
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         categoryImgs[categoryID] = img.secure_url
         delete loadingImg[categoryID]
 
-        this.setState({categoryImgs: categoryImgs, loadingImg: loadingImg})
+        this.setState({categoryImgs: categoryImgs,
+                       loadingImg: loadingImg})
     }
 
 
@@ -218,9 +238,14 @@ class QuoteCategories extends Component {
         })
 
         //reset state
-        this.setState({isEditing: false, emptyErrors: {}, existsErrors: {},
-                       categoryNames: {}, categoryImgs: {}, newCategoryEmpty: false,
-                       newCategoryExists: false, newCategory: {name: '', img: defaultImg}})
+        this.setState({isEditing: false,
+                       emptyErrors: {},
+                       existsErrors: {},
+                       categoryNames: {},
+                       categoryImgs: {},
+                       newCategoryEmpty: false,
+                       newCategoryExists: false,
+                       newCategory: {name: '', img: defaultImg}})
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
@@ -390,7 +415,8 @@ class QuoteCategories extends Component {
                     
                 :   <Quotes userID={userID}
                           categoryID={categoryToOpenID}
-                          vaultID={vault._id} vaultTitle={vault.vaultName}
+                          vaultID={vault._id}
+                          vaultTitle={vault.vaultName}
                           closeCategory={this.closeCategory} />}
             </div>
         )

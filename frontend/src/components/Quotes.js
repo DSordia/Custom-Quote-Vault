@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import consts from '../constants'
-import config from '../config'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { addQuote, deleteQuote, editQuote } from '../actions/quoteActions'
@@ -10,6 +9,8 @@ import AreYouSureModal from './AreYouSureModal'
 import { VaultDiv, Nav, Title, Subtitle, NavReturnBtn, NavEditBtn, QuotesGrid, QuoteContainer,
          NewQuoteContainer, QuoteAuthor, AuthorField, TextArea, QuoteErrorMsg, AddQuoteBtn, QuoteX,
          QuoteBody, QuoteImg, FileInputDiv, FileInput, FileInputBtn, BottomQuoteDiv } from '../styles/InsideVaultStyles'
+import dotenv from 'dotenv'
+dotenv.config()
 
 class Quotes extends Component {
     state = {
@@ -70,7 +71,8 @@ class Quotes extends Component {
         let quotes = {...this.state.tempQuotes}
         delete empty[id]
         delete quotes[id]
-        this.setState({emptyErrors: empty, tempQuotes: quotes})
+        this.setState({emptyErrors: empty,
+                       tempQuotes: quotes})
     }
 
     validateNewQuoteBodyInput = input => {
@@ -79,10 +81,12 @@ class Quotes extends Component {
         //check for empty input
         if (input.trim().length === 0) {
             newQuote.body = ''
-            this.setState({newQuoteEmpty: true, newQuote: newQuote})
+            this.setState({newQuoteEmpty: true,
+                           newQuote: newQuote})
         } else {
             newQuote.body = input
-            this.setState({newQuoteEmpty: false, newQuote: newQuote})
+            this.setState({newQuoteEmpty: false,
+                           newQuote: newQuote})
         }
     }
 
@@ -92,10 +96,12 @@ class Quotes extends Component {
         //check for empty input
         if (input.trim().length === 0) {
             newQuote.author = ''
-            this.setState({newQuoteEmpty: true, newQuote: newQuote})
+            this.setState({newQuoteEmpty: true,
+                           newQuote: newQuote})
         } else {
             newQuote.author = input
-            this.setState({newQuoteEmpty: false, newQuote: newQuote})
+            this.setState({newQuoteEmpty: false,
+                           newQuote: newQuote})
         }
     }
 
@@ -116,7 +122,8 @@ class Quotes extends Component {
             delete empty[quoteID]
         }
 
-        this.setState({tempQuotes: quotes, emptyErrors: empty})
+        this.setState({tempQuotes: quotes,
+                       emptyErrors: empty})
     }
 
     validateEditAuthorInput = (input, quoteID) => {
@@ -136,13 +143,20 @@ class Quotes extends Component {
             delete empty[quoteID]
         }
 
-        this.setState({tempQuotes: quotes, emptyErrors: empty})
+        this.setState({tempQuotes: quotes,
+                       emptyErrors: empty})
     }
 
     //Uploads image to cloudinary DB and stores generated URL
-    uploadNewQuoteImg = async e => {
+    onUploadNewQuoteImg = async e => {
         const newImg = e.target.files[0]
         let newQuote = {...this.state.newQuote}
+
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
 
         const data = new FormData()
         data.append('file', newImg)
@@ -150,19 +164,28 @@ class Quotes extends Component {
 
         this.setState({loadingNewImg: true})
 
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         newQuote.quoteImg = img.secure_url
 
-        this.setState({newQuote: newQuote, loadingNewImg: false})
+        this.setState({newQuote: newQuote,
+                       loadingNewImg: false})
     }
 
     //Uploads image to cloudinary DB and stores generated URL
     onUploadImg = async (e, quoteID) => {
         const newImg = e.target.files[0]
+
         let quotes = {...this.state.tempQuotes}
         let loadingImg = {...this.state.loadingImg}
+
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
 
         const data = new FormData()
         data.append('file', newImg)
@@ -171,7 +194,8 @@ class Quotes extends Component {
         loadingImg[quoteID] = true
         this.setState({loadingImg: loadingImg})
         
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         let quote = {body: quotes[quoteID].body,
@@ -181,7 +205,8 @@ class Quotes extends Component {
         quotes[quoteID] = quote
         delete loadingImg[quoteID]
 
-        this.setState({tempQuotes: quotes, loadingImg: loadingImg})
+        this.setState({tempQuotes: quotes,
+                       loadingImg: loadingImg})
     }
 
     //Store quotes in state while editing to limit API calls
@@ -189,7 +214,8 @@ class Quotes extends Component {
         let quotes = {}
         this.props.category.quotes.forEach(quote => quotes[quote._id] = quote)
 
-        this.setState({tempQuotes: quotes, isEditing: true})
+        this.setState({tempQuotes: quotes,
+                       isEditing: true})
     }
 
     //Update quotes that were changed in DB
@@ -202,9 +228,11 @@ class Quotes extends Component {
         })
 
         //reset state
-        this.setState({isEditing: false, newQuoteEmpty: false,
-                       newQuote: {body: '', author: '', quoteImg: ''},
-                       emptyErrors: {}, tempQuotes: {}})
+        this.setState({isEditing: false,
+                       emptyErrors: {},
+                       tempQuotes: {},
+                       newQuoteEmpty: false,
+                       newQuote: {body: '', author: '', quoteImg: ''}})
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
@@ -323,7 +351,9 @@ class Quotes extends Component {
                                                              this.validateEditAuthorInput(e.target.value, quotes[quotes.length-i-1]._id)
                                                          }} />
 
-                                            <QuoteErrorMsg>{emptyErrors[quotes[quotes.length-i-1]._id] ? consts.QUOTE_EMPTY : ''}</QuoteErrorMsg>
+                                            <QuoteErrorMsg>
+                                                {emptyErrors[quotes[quotes.length-i-1]._id] ? consts.QUOTE_EMPTY : ''}
+                                            </QuoteErrorMsg>
 
                                             {!loadingImg[quotes[quotes.length-i-1]._id] ?
                                                 <QuoteImg isEditing={true}

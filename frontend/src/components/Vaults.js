@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import defaultImg from '../images/vaultPic.jpg'
 import consts from '../constants'
-import config from '../config'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { addVault, deleteVault, editVaultName, editVaultImg } from '../actions/vaultActions'
@@ -9,6 +8,8 @@ import Vault from './Vault'
 import AreYouSureModal from './AreYouSureModal'
 import { VaultsNav, VaultsNavEditBtn, VaultsGrid, NewVaultContainer, InputField, VaultErrorMsg, VaultImg,
          AddVaultBtn, VaultContainer, VaultX, VaultTxt, LoginTxt, FileInputDiv, FileInput, FileInputBtn } from '../styles/VaultsStyles'
+import dotenv from 'dotenv'
+dotenv.config()
 
 class Vaults extends Component {
     state = {
@@ -88,8 +89,11 @@ class Vaults extends Component {
         delete vaultNames[id]
         delete vaultImgs[id]
 
-        this.setState({emptyErrors: empty, existsErrors: exists,
-                       vaultNames: vaultNames, vaultImgs: vaultImgs, deleted: true})
+        this.setState({emptyErrors: empty,
+                       existsErrors: exists,
+                       vaultNames: vaultNames,
+                       vaultImgs: vaultImgs,
+                       deleted: true})
     }
 
     validateNewVaultInput = input => {
@@ -104,7 +108,8 @@ class Vaults extends Component {
                            newVaultExists: false})
         } else {
             newVault.name = input
-            this.setState({newVault: newVault, newVaultEmpty: false})
+            this.setState({newVault: newVault,
+                           newVaultEmpty: false})
 
             //check if input already exists
             if (Object.values(vaultNames).includes(input.trim())) {
@@ -150,13 +155,20 @@ class Vaults extends Component {
         const newImg = e.target.files[0]
         let newVault = {...this.state.newVault}
 
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
+
         const data = new FormData()
         data.append('file', newImg)
         data.append('upload_preset', consts.IMG_FOLDER)
 
         this.setState({loadingNewImg: true})
 
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         newVault.img = img.secure_url
@@ -170,6 +182,12 @@ class Vaults extends Component {
         let vaultImgs = {...this.state.vaultImgs}
         let loadingImg = {...this.state.loadingImg}
 
+        //make sure file type is correct
+        if (!newImg.type.includes('image')){
+            alert(consts.INVALID_IMG)
+            return
+        }
+
         const data = new FormData()
         data.append('file', newImg)
         data.append('upload_preset', consts.IMG_FOLDER)
@@ -177,13 +195,15 @@ class Vaults extends Component {
         loadingImg[vaultID] = true
         this.setState({loadingImg: loadingImg})
 
-        const res = await fetch(config.uploadImgURL, {method: 'POST', body: data})
+        const res = await fetch(process.env.REACT_APP_UPLOAD_IMG_URL,
+                                {method: 'POST', body: data})
         const img = await res.json()
 
         vaultImgs[vaultID] = img.secure_url
         delete loadingImg[vaultID]
 
-        this.setState({vaultImgs: vaultImgs, loadingImg: loadingImg})
+        this.setState({vaultImgs: vaultImgs,
+                       loadingImg: loadingImg})
     }
 
     //Store values that can be edited in state to limit API calls
@@ -204,16 +224,24 @@ class Vaults extends Component {
     doneEditing = () => {
         this.props.vaults.vaults.forEach(vault => {
             if (vault.vaultName !== this.state.vaultNames[vault._id]) {
-                this.props.editVaultName(vault._id, this.state.vaultNames[vault._id], this.props.userID)
+                this.props.editVaultName(vault._id, this.state.vaultNames[vault._id],
+                                         this.props.userID)
             }
             if (vault.vaultImg !== this.state.vaultImgs[vault._id]) {
-                this.props.editVaultImg(vault._id, this.state.vaultImgs[vault._id], this.props.userID)
+                this.props.editVaultImg(vault._id, this.state.vaultImgs[vault._id],
+                                        this.props.userID)
             }
         })
 
         //reset state
-        this.setState({isEditing: false, emptyErrors: {}, existsErrors: {}, vaultNames: {}, vaultImgs: {},
-                       newVaultEmpty: false, newVaultExists: false, newVault: {name: '', img: defaultImg}})
+        this.setState({isEditing: false,
+                       emptyErrors: {},
+                       existsErrors: {},
+                       vaultNames: {},
+                       vaultImgs: {},
+                       newVaultEmpty: false,
+                       newVaultExists: false,
+                       newVault: {name: '', img: defaultImg}})
     }
 
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
@@ -305,7 +333,9 @@ class Vaults extends Component {
                                     <CSSTransition in={true} key={vaults[vaults.length-i-1]._id} timeout={500} classNames='fadeOnAdd'>
                                         {isEditing ?
                                             <VaultContainer key={vaults[vaults.length-i-1]._id}
-                                                            onClick={() => {if (!isEditing) this.openVault(vaults[vaults.length-i-1]._id)}}
+                                                            onClick={() => {if (!isEditing) {
+                                                                this.openVault(vaults[vaults.length-i-1]._id)
+                                                            }}}
                                                             isEditing={true}>
 
                                                 <VaultX onClick={() => {

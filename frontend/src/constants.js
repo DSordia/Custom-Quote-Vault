@@ -16,7 +16,8 @@ const consts = {
     CATEGORY_EXISTS: 'Category name already exists.',
     IMG_FOLDER: 'cqv-imgs',
     MIN_PASSWORD_LENGTH: 8,
-    EMAIL_DOESNT_EXIST: 'A user with this email does not exist.'
+    EMAIL_DOESNT_EXIST: 'A user with this email does not exist.',
+    INVALID_IMG: 'Uploaded file must be an image. (.jpg, .jpeg, .png)'
 }
 
 export default consts
