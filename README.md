@@ -16,21 +16,21 @@
 - Fade effects
 - Modals
 
-#### Technologies Used:
+#### Technologies Used (MERN stack):
 - HTML
 - CSS
 - JavaScript
-- ReactJS
+- React
 - Redux
 - React-Router
 - Styled Components
 - Express
-- MongoDB/Mongoose
-- NodeJS
+- MongoDB
+- Node
 - Cloudinary
 - Heroku
 
 ![login](images/login.PNG)
 ![img1](images/img1.PNG)
-![img2](images/img2.PNG)
+![img2](images/img2.png)
 ![img3](images/img3.PNG)
