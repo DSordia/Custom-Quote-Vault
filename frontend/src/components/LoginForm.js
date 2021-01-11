@@ -32,8 +32,6 @@ class LoginForm extends Component {
     typePass = input => this.setState({pass: input, passErr: false})
 
     onLoginClicked = async () => {
-        this.setState({loginClicked: true})
-
         //Check if either field is empty
         let valid = true
         if (this.state.email.length === 0) {
@@ -48,13 +46,14 @@ class LoginForm extends Component {
         }
 
         if (valid) {
+            this.setState({loginClicked: true})
+            
             //authenticate user
             const user = {email: this.state.email.toLowerCase(), password: this.state.pass}
             const config = {headers: {'content-type': 'application/json'}}
 
             try {
                 const res = await axios.post('/api/auth', JSON.stringify(user), config)
-                this.setState({loginClicked: true})
                 this.props.login(res.data)
             //if catch, then user user doesn't exist or invalid password
             } catch (e) {

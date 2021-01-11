@@ -20,6 +20,7 @@ class QuoteCategories extends Component {
         isEditing: false,
         showAreYouSureModal: false,
         categoryToDeleteID: 0,
+        categoryToDeleteIdx: 0,
         deleted: false,
         newCategory: {name: '', img: defaultImg},
         newCategoryEmpty: false,
@@ -34,8 +35,8 @@ class QuoteCategories extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        // if there are more categories in the DB than in state, add that category to state
-        // unless it's because a category was deleted from state
+        //if there are more categories in the DB than in state, add that category to state
+        //unless it's because a category was deleted from state
         if (state.isEditing && Object.keys(state.categoryNames).length < props.vault.categories.length) {
             let categoryNames = {...state.categoryNames}
             let categoryImgs = {...state.categoryImgs}
@@ -52,9 +53,8 @@ class QuoteCategories extends Component {
             return {categoryNames: categoryNames,
                     categoryImgs: categoryImgs,
                     deleted: false}
-        } else {
-            return null
         }
+        return null
     }
 
     addCategory = () => {
@@ -111,7 +111,8 @@ class QuoteCategories extends Component {
                            newCategoryExists: false})
         } else {
             newCategory.name = input
-            this.setState({newCategory: newCategory, newCategoryEmpty: false})
+            this.setState({newCategory: newCategory,
+                           newCategoryEmpty: false})
 
             //check if input already exists
             if (Object.values(categoryNames).includes(input.trim())) {
@@ -251,7 +252,10 @@ class QuoteCategories extends Component {
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
-    setCategoryToDeleteID = categoryToDeleteID => this.setState({categoryToDeleteID: categoryToDeleteID})
+    setCategoryToDelete = (categoryToDeleteID, categoryToDeleteIdx) => {
+        this.setState({categoryToDeleteID: categoryToDeleteID,
+                       categoryToDeleteIdx: categoryToDeleteIdx})
+    }
 
     openCategory = categoryToOpenID => this.setState({categoryIsOpen: true,
                                                       categoryToOpenID: categoryToOpenID})
@@ -271,7 +275,7 @@ class QuoteCategories extends Component {
 
         const { categoryIsOpen, categoryToOpenID, isEditing, showAreYouSureModal, newCategory,
                 newCategoryEmpty, newCategoryExists, emptyErrors, existsErrors, categoryNames,
-                categoryImgs, loadingNewImg, loadingImg, borderColors} = this.state
+                categoryImgs, loadingNewImg, loadingImg, borderColors, categoryToDeleteIdx} = this.state
 
         const doneIsDisabled = Object.keys(emptyErrors).length > 0 || Object.keys(existsErrors).length > 0
         const addNewDisabled = newCategoryEmpty || newCategoryExists
@@ -297,16 +301,6 @@ class QuoteCategories extends Component {
                                     Done Adding / Editing / Deleting Categories
                                 </NavEditBtn>}
                         </Nav>
-
-                        <CSSTransition in={showAreYouSureModal}
-                                       timeout={500}
-                                       classNames='fadeModal'
-                                       unmountOnExit>
-                            <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
-                                             delete={this.deleteCategory}
-                                             areYouSureTxt={consts.ARE_YOU_SURE_CATEGORY_TXT}
-                                             yesTxt={consts.YES_CATEGORY_TXT} />
-                        </CSSTransition>
 
                         <Title>{vault.vaultName}</Title>
                         <Subtitle>Quote Categories</Subtitle>
@@ -361,15 +355,25 @@ class QuoteCategories extends Component {
                                                                 }}
                                                                isEditing={true}>
 
+                                                <CSSTransition in={showAreYouSureModal && i === categoryToDeleteIdx}
+                                                               timeout={500}
+                                                               classNames='fadeModal'
+                                                               unmountOnExit>
+                                                    <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
+                                                                     delete={this.deleteCategory}
+                                                                     areYouSureTxt={consts.ARE_YOU_SURE_CATEGORY_TXT}
+                                                                     yesTxt={consts.YES_CATEGORY_TXT} />
+                                                </CSSTransition>
+
                                                 <CategoryX onClick={() => {
                                                                 this.openAreYouSureModal()
-                                                                this.setCategoryToDeleteID(categories[categories.length-i-1]._id)
+                                                                this.setCategoryToDelete(categories[categories.length-i-1]._id, i)
                                                            }}>
                                                     X
                                                 </CategoryX>
 
                                                 <InputField maxLength={consts.MAX_CATEGORY_NAME_LENGTH}
-                                                            value={categoryNames[categories[categories.length-i-1]._id]}
+                                                            value={categoryNames[categories[categories.length-i-1]._id] || ''}
                                                             onChange={e => {
                                                                 this.validateEditInput(e.target.value,
                                                                                        categories[categories.length-i-1]._id)

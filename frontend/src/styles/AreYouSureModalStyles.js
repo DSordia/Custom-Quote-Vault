@@ -11,10 +11,10 @@ export const ModalDiv = styled.div`
     flex-direction: column;
     background-color: #151515;
     color: white;
-    @media (max-width: 480px) { width: 85%; margin-top: 13%; }
-    @media (min-width: 480px) and (max-width: 768px) { width: 60%; margin-top: 9%; }
-    @media (min-width: 768px) and (max-width: 1200px) { width: 45%; margin-top: 8%; }
-    @media (min-width: 1200px) { width: 35%; margin-top: 6%; }
+    @media (max-width: 480px) { width: 85% }
+    @media (min-width: 480px) and (max-width: 768px) { width: 60% }
+    @media (min-width: 768px) and (max-width: 1200px) { width: 45%; }
+    @media (min-width: 1200px) { width: 35%; }
 `
 export const ModalNavX = styled.a`
     color: #bfbfbf;

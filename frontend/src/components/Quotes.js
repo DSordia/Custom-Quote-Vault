@@ -17,6 +17,8 @@ class Quotes extends Component {
         isEditing: false,
         showAreYouSureModal: false,
         quoteToDeleteID: 0,
+        quoteToDeleteIdx: 0,
+        deleted: false,
         newQuote: {body: '', author: '', quoteImg: ''},
         newQuoteEmpty: false,
         emptyErrors: {},
@@ -27,17 +29,23 @@ class Quotes extends Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (state.isEditing && Object.keys(state.tempQuotes).length < props.category.quotes.length) {
+        if (state.isEditing) {
             let quotes = {...state.tempQuotes}
 
-            const newQuoteID = props.category.quotes[props.category.quotes.length-1]._id
-            const newQuote = props.category.quotes[props.category.quotes.length-1]
-            quotes[newQuoteID] = newQuote
+            //added a quote
+            if (state.isEditing && Object.keys(state.tempQuotes).length < props.category.quotes.length) {
+                const newQuoteID = props.category.quotes[props.category.quotes.length-1]._id
+                const newQuote = props.category.quotes[props.category.quotes.length-1]
+                quotes[newQuoteID] = newQuote
+                return {tempQuotes: quotes}
 
-            return {tempQuotes: quotes}
-        } else {
-            return null
+            //deleted a quote
+            } else if (state.isEditing && Object.keys(state.tempQuotes).length > props.category.quotes.length) {
+                delete quotes[state.quoteToDeleteID]
+                return {tempQuotes: quotes}
+            }
         }
+        return null
     }
 
     addQuote = () => {
@@ -66,15 +74,12 @@ class Quotes extends Component {
         this.props.deleteQuote(id, this.props.categoryID,
                                this.props.vaultID, this.props.userID)
 
-        //delete from state
+        //delete from state; will delete from tempQuotes in getDerived since render has to access properties
         let empty = {...this.state.emptyErrors}
-        let quotes = {...this.state.tempQuotes}
 
         delete empty[id]
-        delete quotes[id]
         
-        this.setState({emptyErrors: empty,
-                       tempQuotes: quotes})
+        this.setState({emptyErrors: empty})
     }
 
     validateNewQuoteBodyInput = input => {
@@ -240,7 +245,10 @@ class Quotes extends Component {
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
-    setQuoteToDeleteID = quoteToDeleteID => this.setState({quoteToDeleteID: quoteToDeleteID})
+    setQuoteToDelete = (quoteToDeleteID, quoteToDeleteIdx) => {
+        this.setState({quoteToDeleteID: quoteToDeleteID,
+                       quoteToDeleteIdx: quoteToDeleteIdx})
+    }
     
     getBorderColors = colors => {
         if (Math.round(Math.random()) === 0) {
@@ -254,7 +262,7 @@ class Quotes extends Component {
         const { vaultTitle, category, closeCategory } = this.props
 
         const { isEditing, showAreYouSureModal, newQuote, newQuoteEmpty, emptyErrors,
-                tempQuotes, loadingNewImg, loadingImg, borderColors } = this.state
+                tempQuotes, loadingNewImg, loadingImg, borderColors, quoteToDeleteIdx } = this.state
 
         const doneIsDisabled = Object.keys(emptyErrors).length > 0
         const quotes = category.quotes
@@ -277,16 +285,6 @@ class Quotes extends Component {
                             Done Adding / Editing / Deleting Quotes
                         </NavEditBtn>}
                 </Nav>
-
-                <CSSTransition in={showAreYouSureModal}
-                               timeout={500}
-                               classNames='fadeModal'
-                               unmountOnExit>
-                    <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal} 
-                                     delete={this.deleteQuote}
-                                     areYouSureTxt={consts.ARE_YOU_SURE_QUOTE_TXT}
-                                     yesTxt={consts.YES_QUOTE_TXT} />
-                </CSSTransition>
 
                 <Title>{vaultTitle} / {category.categoryName}</Title>
                 <Subtitle>Quotes</Subtitle>
@@ -339,9 +337,20 @@ class Quotes extends Component {
                                     {isEditing ?
                                         <QuoteContainer key={quotes[quotes.length-i-1]._id}>
 
+                                            <CSSTransition in={showAreYouSureModal && i === quoteToDeleteIdx}
+                                                           timeout={500}
+                                                           classNames='fadeModal'
+                                                           unmountOnExit>
+                                                    <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
+                                                                     delete={this.deleteQuote}
+                                                                     areYouSureTxt={consts.ARE_YOU_SURE_QUOTE_TXT}
+                                                                     yesTxt={consts.YES_QUOTE_TXT} />
+                                            </CSSTransition>
+                                                
+
                                             <QuoteX onClick={() => {
                                                 this.openAreYouSureModal()
-                                                this.setQuoteToDeleteID(quotes[quotes.length-i-1]._id)}}>
+                                                this.setQuoteToDelete(quotes[quotes.length-i-1]._id, i)}}>
                                                 X
                                             </QuoteX>
 

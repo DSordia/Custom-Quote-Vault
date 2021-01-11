@@ -19,6 +19,7 @@ class Vaults extends Component {
         isEditing: false,
         showAreYouSureModal: false,
         vaultToDeleteID: 0,
+        vaultToDeleteIdx: 0,
         deleted: false,
         newVault: {name: '', img: defaultImg},
         newVaultEmpty: false,
@@ -56,9 +57,8 @@ class Vaults extends Component {
             return {vaultNames: vaultNames,
                     vaultImgs: vaultImgs,
                     deleted: false}
-        } else {
-            return null
         }
+        return null
     }
 
     addVault = () => {
@@ -255,7 +255,10 @@ class Vaults extends Component {
     openAreYouSureModal = () => this.setState({showAreYouSureModal: true})
     closeAreYouSureModal = () => this.setState({showAreYouSureModal: false})
 
-    setVaultToDeleteID = vaultToDeleteID => this.setState({vaultToDeleteID: vaultToDeleteID})
+    setVaultToDelete = (vaultToDeleteID, vaultToDeleteIdx) => {
+        this.setState({vaultToDeleteID: vaultToDeleteID,
+                       vaultToDeleteIdx: vaultToDeleteIdx})
+    }
 
     openVault = vaultToOpenID => {
         this.setState({vaultIsOpen: true,
@@ -270,7 +273,7 @@ class Vaults extends Component {
 
         const { vaultIsOpen, vaultToOpenID, isEditing, showAreYouSureModal, newVault,
                 newVaultEmpty, newVaultExists, emptyErrors, existsErrors, vaultNames,
-                vaultImgs, loadingNewImg, loadingImg } = this.state
+                vaultImgs, loadingNewImg, loadingImg, vaultToDeleteIdx } = this.state
 
         const doneIsDisabled = Object.keys(emptyErrors).length > 0 || Object.keys(existsErrors).length > 0
         const addNewDisabled = newVaultEmpty || newVaultExists
@@ -290,16 +293,6 @@ class Vaults extends Component {
                                     Done Adding / Editing / Deleting Vaults
                                 </VaultsNavEditBtn>}
                         </VaultsNav>
-    
-                        <CSSTransition in={showAreYouSureModal}
-                                       timeout={500}
-                                       classNames='fadeModal'
-                                       unmountOnExit>
-                            <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
-                                             delete={this.deleteVault}
-                                             areYouSureTxt={consts.ARE_YOU_SURE_VAULT_TXT}
-                                             yesTxt={consts.YES_VAULT_TXT} />
-                        </CSSTransition>
     
                         <TransitionGroup>
                             <VaultsGrid>
@@ -354,15 +347,25 @@ class Vaults extends Component {
                                                             }}}
                                                             isEditing={true}>
 
+                                                <CSSTransition in={showAreYouSureModal && i === vaultToDeleteIdx}
+                                                               timeout={500}
+                                                               classNames='fadeModal'
+                                                               unmountOnExit>
+                                                    <AreYouSureModal closeAreYouSureModal={this.closeAreYouSureModal}
+                                                                     delete={this.deleteVault}
+                                                                     areYouSureTxt={consts.ARE_YOU_SURE_VAULT_TXT}
+                                                                     yesTxt={consts.YES_VAULT_TXT} />
+                                                </CSSTransition>
+
                                                 <VaultX onClick={() => {
                                                             this.openAreYouSureModal()
-                                                            this.setVaultToDeleteID(vaults[vaults.length-i-1]._id)
+                                                            this.setVaultToDelete(vaults[vaults.length-i-1]._id, i)
                                                         }}>
                                                     X
                                                 </VaultX>
 
                                                 <InputField maxLength={consts.MAX_VAULT_NAME_LENGTH}
-                                                            value={vaultNames[vaults[vaults.length-i-1]._id]}
+                                                            value={vaultNames[vaults[vaults.length-i-1]._id] || ''}
                                                             onChange={e => {
                                                                 this.validateEditInput(e.target.value, vaults[vaults.length-i-1]._id)
                                                             }} />
